@@ -16,11 +16,6 @@ public class VehicleInSideSeatMNG : UdonSharpBehaviour
 
     void Start()
     {
-        for(int id = 0; id < preset_CatchColliders.Length; id++)
-        {
-            preset_CatchColliders[id].local_SeatMNG = this;
-            preset_CatchColliders[id].local_Id_OnSeatMNG = id;
-        }
 
     }
 

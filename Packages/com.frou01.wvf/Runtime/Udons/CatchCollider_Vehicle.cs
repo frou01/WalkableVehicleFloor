@@ -6,14 +6,14 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class CatchCollider_Vehicle : UdonSharpBehaviour
 {
-    [System.NonSerialized]public VehicleInSideSeatMNG local_SeatMNG;
+    [HideInInspector] [SerializeField] public VehicleInSideSeatMNG local_SeatMNG;
 
     public GameObject vehicleObject;
     public GameObject inVehicleCollider;
 
     public bool autoCatch = true;
 
-    [System.NonSerialized]public int local_Id_OnSeatMNG;
+    [HideInInspector][SerializeField] public int local_Id_OnSeatMNG;
     void Start()
     {
         DisableInteractive = true;
