@@ -14,10 +14,6 @@ public class VehicleInSideSeatMNG : UdonSharpBehaviour
 
     public PlayerChaser preset_playerChaser;
 
-    void Start()
-    {
-
-    }
 
     public void EnterOnVehicle(int VehicleID)
     {
