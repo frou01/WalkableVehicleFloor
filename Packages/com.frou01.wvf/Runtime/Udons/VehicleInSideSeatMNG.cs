@@ -8,29 +8,25 @@ public class VehicleInSideSeatMNG : UdonSharpBehaviour
 {
     [System.NonSerialized]public FloorStationController local_FoundStation;
 
-    public CatchCollider_Vehicle[] preset_CatchColliders;
+    [HideInInspector] public CatchCollider_Vehicle[] preset_CatchColliders;
 
-    public GameObject[] preset_inVehicleCollider;
+    [HideInInspector] public GameObject[] preset_inVehicleCollider;
 
     public PlayerChaser preset_playerChaser;
 
-    void Start()
-    {
-        for(int id = 0; id < preset_CatchColliders.Length; id++)
-        {
-            preset_CatchColliders[id].local_SeatMNG = this;
-            preset_CatchColliders[id].local_Id_OnSeatMNG = id;
-        }
 
-    }
-
-    public void EnterOnVehicle(int VehicleID)
+    public bool EnterOnVehicle(int VehicleID)
     {
         if (local_FoundStation == null)
         {
             local_FoundStation = findStation(Networking.LocalPlayer);
         }
-        if (!local_FoundStation.synced_Using) local_FoundStation.startSeating(VehicleID);//auto enter only on not using
+        if (!local_FoundStation.synced_Using)
+        {
+            local_FoundStation.startSeating(VehicleID);//auto enter only on not using
+            return true;
+        }
+        return false;
     }
     public void ForcedRidingOnVehicle(int VehicleID)
     {
@@ -45,7 +41,7 @@ public class VehicleInSideSeatMNG : UdonSharpBehaviour
     {
         local_FoundStation.PlayerExitBounds(VehicleID);
     }
-    public FloorStationController findStation(VRCPlayerApi playerApi)
+    private FloorStationController findStation(VRCPlayerApi playerApi)
     {
         //TODO Find localPlayer PlayerObject.FloorStationController Method
         var objects = Networking.GetPlayerObjects(playerApi);

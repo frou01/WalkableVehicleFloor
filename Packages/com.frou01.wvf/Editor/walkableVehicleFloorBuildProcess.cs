@@ -31,10 +31,16 @@ internal class walkableVehicleFloorBuildProcess : IProcessSceneWithReport , IVRC
         if (VISM == null) return;
         VISM.transform.localPosition = Vector3.zero;
         VISM.preset_CatchColliders = target_CatchCollider_Vehicle.ToArray();
+        for (int id = 0; id < target_CatchCollider_Vehicle.Count; id++)
+        {
+            target_CatchCollider_Vehicle[id].local_SeatMNG = VISM;
+            target_CatchCollider_Vehicle[id].local_Id_OnSeatMNG = id;
+        }
         GameObject[] inVehicleCollider = new GameObject[target_CatchCollider_Vehicle.Count];
         int index = 0;
         foreach (CatchCollider_Vehicle CCV in target_CatchCollider_Vehicle)
         {
+            Debug.Log("process CatchCollider at " + CCV.name);
             if (CCV == null)
             {
                 Debug.Log("Destroyed CatchCollider_Vehicle ");
@@ -58,21 +64,10 @@ internal class walkableVehicleFloorBuildProcess : IProcessSceneWithReport , IVRC
 
     void Proceed_Search_VehicleInSideSeatMNG(Transform parent)
     {
-        if(parent.gameObject != null)
-        {
-            if (parent.gameObject.GetComponent<CatchCollider_Vehicle>() != null)
-            {
-                target_CatchCollider_Vehicle.Add(parent.gameObject.GetComponent<CatchCollider_Vehicle>());
-            }
-            if (parent.gameObject.GetComponent<VehicleInSideSeatMNG>() != null)
-            {
-                VISM = parent.gameObject.GetComponent<VehicleInSideSeatMNG>();
-            }
-        }
-        foreach (Transform obj in parent)
-        {
-            Proceed_Search_VehicleInSideSeatMNG(obj);
-        }
+
+        target_CatchCollider_Vehicle.AddRange(parent.gameObject.GetComponentsInChildren<CatchCollider_Vehicle>(true));
+        if(parent.gameObject.GetComponentInChildren<VehicleInSideSeatMNG>(true) != null) VISM = parent.gameObject.GetComponentInChildren<VehicleInSideSeatMNG>(true);
+        
     }
     public bool OnBuildRequested(VRCSDKRequestedBuildType requestedBuildType)
     {

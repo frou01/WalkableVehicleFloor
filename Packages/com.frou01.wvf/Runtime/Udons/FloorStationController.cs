@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.Animations;
 using VRC.SDKBase;
 using VRC.Udon;
-
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(VRC.SDKBase.VRCStation))]
 public class FloorStationController : UdonSharpBehaviour
 {
     public VehicleInSideSeatMNG preset_Manager;
@@ -15,9 +16,8 @@ public class FloorStationController : UdonSharpBehaviour
 
     private VRC.SDKBase.VRCStation local_StationBody;
     public Transform preset_sittingTransform;
-    public Transform preset_exit___Position;
 
-    public Vector3 local_controlMoveInput = new Vector3(0,0,0);
+    private Vector3 local_controlMoveInput = new Vector3(0,0,0);
     private Vector3 local_moveVelocity = new Vector3(0,0,0);
     private float local_controlRollInput;
     private GameObject local_VehicleObject;
@@ -30,7 +30,6 @@ public class FloorStationController : UdonSharpBehaviour
     [System.NonSerialized] [UdonSynced(UdonSyncMode.None)] public bool synced_Using;
     bool local_isOwner;
 
-    public bool isSDK2Mode;
     public Animator seatedSetter;
 
     bool tempFlag_resetRolling = false;
@@ -65,10 +64,10 @@ public class FloorStationController : UdonSharpBehaviour
         global_targetVehicleID = vehicleID;
         this.local_playerApi = Networking.LocalPlayer;
     }
-    public void startSeating()
+    private void startSeating()
     {
 
-
+        local_catchCollider.DisableInteractive = true;
 
         //setUp Hierarchy
         preset_sittingTransform.parent = local_PlayerChaserTransform.parent = local_VehicleObject.transform;
@@ -99,22 +98,21 @@ public class FloorStationController : UdonSharpBehaviour
     Vector3 movedByRotation;
     Vector3 ControllerToHead;
 
-    public int synced_targetVehicleID;
-    [UdonSynced(UdonSyncMode.None)] public int global_targetVehicleID;
-    [UdonSynced(UdonSyncMode.None)] public Vector3 syncedPosition;
-    [UdonSynced(UdonSyncMode.None)] public Quaternion syncedRotation;
-    [UdonSynced(UdonSyncMode.None)] public int AllocatePlayer = -1;
-    [UdonSynced(UdonSyncMode.None)] public bool SDK2Fallback = false;
+    private int synced_targetVehicleID;
+    [UdonSynced(UdonSyncMode.None)] private int global_targetVehicleID;
+    [UdonSynced(UdonSyncMode.None)] private Vector3 syncedPosition;
+    [UdonSynced(UdonSyncMode.None)] private Quaternion syncedRotation;
+    [UdonSynced(UdonSyncMode.None)][HideInInspector]public bool SDK2Fallback = false;
 
-    public Vector3 prevSyncedPosition;
-    public Quaternion prevSyncedRotation;
-    public Vector3 position;
-    public Quaternion rotation;
+    private Vector3 prevSyncedPosition;
+    private Quaternion prevSyncedRotation;
+    private Vector3 position;
+    private Quaternion rotation;
     float syncInterval = 0.4f;
     float FromLastExcuteSync;
     bool excuteSync;
     Vector3 local_restorePos;
-    public void LateUpdate()
+    private void LateUpdate()
     {
         if (synced_targetVehicleID != global_targetVehicleID) excuteSync = true;
         if (synced_Using && local_VehicleObject != null)
@@ -160,7 +158,7 @@ public class FloorStationController : UdonSharpBehaviour
             }
         }
     }
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (synced_Using && local_VehicleObject != null)
         {
@@ -181,10 +179,6 @@ public class FloorStationController : UdonSharpBehaviour
                 if (!tempFlag_resetRolling) local_InVehicleController.Move(movedByRotation + local_moveVelocity * FixedDeltaTime);
             }
         }
-    }
-    public void restorePosition()
-    {
-        local_playerApi.TeleportTo(local_restorePos, local_playerApi.GetRotation());
     }
 
     public void PlayerExitBounds_force()
@@ -223,11 +217,10 @@ public class FloorStationController : UdonSharpBehaviour
         if(player == Networking.LocalPlayer) SyncParmReset();
     }
 
-    public void SyncParmReset()
+    private void SyncParmReset()
     {
         synced_Using = false;
         global_targetVehicleID = -1;
-        AllocatePlayer = -1;
         RequestSerialization();
     }
 
