@@ -9,7 +9,7 @@ public class WakableFloorSDK2FallBack : UdonSharpBehaviour
     public VehicleInSideSeatMNG preset_SeatMNG;
     void Start()
     {
-        
+        InteractionText = "Change To SDK2Mode";
     }
 
     public override void Interact()

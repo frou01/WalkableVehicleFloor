@@ -16,6 +16,7 @@ public class CatchCollider_Vehicle : UdonSharpBehaviour
     [HideInInspector][SerializeField] public int local_Id_OnSeatMNG;
     void Start()
     {
+        if (vehicleObject == null) vehicleObject = this.gameObject;
         DisableInteractive = true;
     }
 
@@ -33,8 +34,7 @@ public class CatchCollider_Vehicle : UdonSharpBehaviour
             if (autoCatch)
             {
                 //Debug.Log("Player " + Networking.LocalPlayer.displayName + " Enter Vehicle " + local_Id_OnSeatMNG);
-                DisableInteractive = true;
-                local_SeatMNG.EnterOnVehicle(local_Id_OnSeatMNG);
+                DisableInteractive = local_SeatMNG.EnterOnVehicle(local_Id_OnSeatMNG);//auto catch success: disable interact, if not, enableInteract
             }
         }
     }
