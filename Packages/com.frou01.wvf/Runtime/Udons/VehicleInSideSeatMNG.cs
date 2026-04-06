@@ -1,65 +1,67 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 
-public class VehicleInSideSeatMNG : UdonSharpBehaviour
+namespace frou01.wvf
 {
-    [System.NonSerialized]public FloorStationController local_FoundStation;
-
-    [HideInInspector] public CatchCollider_Vehicle[] preset_CatchColliders;
-
-    [HideInInspector] public GameObject[] preset_inVehicleCollider;
-
-    public PlayerChaser preset_playerChaser;
-
-
-    public bool EnterOnVehicle(int VehicleID)
+    public class VehicleInSideSeatMNG : UdonSharpBehaviour
     {
-        if (local_FoundStation == null)
-        {
-            local_FoundStation = findStation(Networking.LocalPlayer);
-        }
-        if (!local_FoundStation.synced_Using)
-        {
-            local_FoundStation.startSeating(VehicleID);//auto enter only on not using
-            return true;
-        }
-        return false;
-    }
-    public void ForcedRidingOnVehicle(int VehicleID)
-    {
-        if (local_FoundStation == null)
-        {
-            local_FoundStation = findStation(Networking.LocalPlayer);
-        }
-        local_FoundStation.PlayerExitBounds_force();
-        local_FoundStation.startSeating(VehicleID);
-    }
-    public void Exit(int VehicleID)
-    {
-        local_FoundStation.PlayerExitBounds(VehicleID);
-    }
-    private FloorStationController findStation(VRCPlayerApi playerApi)
-    {
-        //TODO Find localPlayer PlayerObject.FloorStationController Method
-        var objects = Networking.GetPlayerObjects(playerApi);
-        for (int i = 0; i < objects.Length; i++)
-        {
-            if (!Utilities.IsValid(objects[i])) continue;
-            FloorStationController foundScript = objects[i].GetComponent<FloorStationController>();
-            if (Utilities.IsValid(foundScript)) return foundScript;
-        }
-        Debug.LogError("Station Not Found");
-        return null;
-    }
+        [System.NonSerialized] public FloorStationController local_FoundStation;
 
-    public void changeStationFallback()
-    {
-        if (local_FoundStation == null)
+        [HideInInspector] public CatchCollider_Vehicle[] preset_CatchColliders;
+
+        [HideInInspector] public GameObject[] preset_inVehicleCollider;
+
+        public PlayerChaser preset_playerChaser;
+
+
+        public bool EnterOnVehicle(int VehicleID)
         {
-            local_FoundStation = findStation(Networking.LocalPlayer);
+            if (local_FoundStation == null)
+            {
+                local_FoundStation = findStation(Networking.LocalPlayer);
+            }
+            if (!local_FoundStation.synced_Using)
+            {
+                local_FoundStation.startSeating(VehicleID);//auto enter only on not using
+                return true;
+            }
+            return false;
         }
-        local_FoundStation.changeStationFallback();
+        public void ForcedRidingOnVehicle(int VehicleID)
+        {
+            if (local_FoundStation == null)
+            {
+                local_FoundStation = findStation(Networking.LocalPlayer);
+            }
+            local_FoundStation.PlayerExitBounds_force();
+            local_FoundStation.startSeating(VehicleID);
+        }
+        public void Exit(int VehicleID)
+        {
+            local_FoundStation.PlayerExitBounds(VehicleID);
+        }
+        private FloorStationController findStation(VRCPlayerApi playerApi)
+        {
+            //TODO Find localPlayer PlayerObject.FloorStationController Method
+            var objects = Networking.GetPlayerObjects(playerApi);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                if (!Utilities.IsValid(objects[i])) continue;
+                FloorStationController foundScript = objects[i].GetComponent<FloorStationController>();
+                if (Utilities.IsValid(foundScript)) return foundScript;
+            }
+            Debug.LogError("Station Not Found");
+            return null;
+        }
+
+        public void changeStationFallback()
+        {
+            if (local_FoundStation == null)
+            {
+                local_FoundStation = findStation(Networking.LocalPlayer);
+            }
+            local_FoundStation.changeStationFallback();
+        }
     }
 }
