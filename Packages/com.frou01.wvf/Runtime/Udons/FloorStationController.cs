@@ -1,9 +1,7 @@
 ﻿
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.Animations;
 using VRC.SDKBase;
-using VRC.Udon;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(VRC.SDKBase.VRCStation))]
 public class FloorStationController : UdonSharpBehaviour
