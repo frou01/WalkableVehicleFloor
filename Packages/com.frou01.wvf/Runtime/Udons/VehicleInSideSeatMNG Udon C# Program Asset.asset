@@ -20,7 +20,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -6801291476351915663
+  scriptID: -2636020195133604875
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -61,7 +61,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: FloorStationController, WVF_Def-udon
+      Data: frou01.wvf.FloorStationController, WVF_Def-udon
     - Name: 
       Entry: 8
       Data: 
@@ -127,7 +127,7 @@ MonoBehaviour:
       Data: 8|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: CatchCollider_Vehicle[], WVF_Def-udon
+      Data: frou01.wvf.CatchCollider_Vehicle[], WVF_Def-udon
     - Name: 
       Entry: 8
       Data: 
@@ -253,7 +253,7 @@ MonoBehaviour:
       Data: 17|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: PlayerChaser, Frou01UtilAssembly.Runtime
+      Data: frou01.util.PlayerChaser, Frou01UtilAssembly.Runtime
     - Name: 
       Entry: 8
       Data: 

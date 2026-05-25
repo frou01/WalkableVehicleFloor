@@ -1,6 +1,6 @@
 {
     "name": "WVF_Def-udon",
-    "rootNamespace": "",
+    "rootNamespace": "frou01.wvf",
     "references": [
         "VRC.Udon",
         "UdonSharp.Runtime",

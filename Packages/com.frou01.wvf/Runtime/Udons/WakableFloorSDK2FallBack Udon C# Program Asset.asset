@@ -20,7 +20,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 1
-  scriptID: -6580149064954106707
+  scriptID: 7156712972443756130
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -61,7 +61,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: VehicleInSideSeatMNG, WVF_Def-udon
+      Data: frou01.wvf.VehicleInSideSeatMNG, WVF_Def-udon
     - Name: 
       Entry: 8
       Data: 
