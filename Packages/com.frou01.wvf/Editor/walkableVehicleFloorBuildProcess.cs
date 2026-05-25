@@ -43,16 +43,16 @@ namespace frou01.wvf.editor
             int index = 0;
             foreach (CatchCollider_Vehicle CCV in target_CatchCollider_Vehicle)
             {
-                Debug.Log("process CatchCollider at " + CCV.name);
+                //Debug.Log("process CatchCollider at " + CCV.name);
                 if (CCV == null)
                 {
-                    Debug.Log("Destroyed CatchCollider_Vehicle ");
+                    //Debug.Log("Destroyed CatchCollider_Vehicle ");
                     continue;
                 }
                 inVehicleCollider[index] = CCV.inVehicleCollider;
                 if (inVehicleCollider[index] == null)
                 {
-                    Debug.Log("Destroyed inVehicleCollider ");
+                    //Debug.Log("Destroyed inVehicleCollider ");
                     continue;
                 }
                 inVehicleCollider[index].transform.parent = VISM.transform.parent;
