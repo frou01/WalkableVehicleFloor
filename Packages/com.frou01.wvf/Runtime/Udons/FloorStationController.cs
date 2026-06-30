@@ -63,6 +63,7 @@ namespace frou01.wvf
             local_VehicleObject_transform = local_VehicleObject.transform;
             local_inVehicleCollider = local_catchCollider.inVehicleCollider;
             global_targetVehicleID = vehicleID;
+            excuteSync = true;
             local_playerApi = Networking.LocalPlayer;
         }
         private void startSeating()
@@ -115,10 +116,17 @@ namespace frou01.wvf
         Vector3 local_restorePos;
         private void LateUpdate()
         {
-            if (synced_targetVehicleID != global_targetVehicleID) excuteSync = true;
-            if (synced_Using && local_VehicleObject != null)
+            if (!local_isOwner)
             {
-                if (local_isOwner)
+                FromLastExcuteSync += Time.deltaTime;
+                position = Vector3.Lerp(prevSyncedPosition, syncedPosition, FromLastExcuteSync / syncInterval);
+                rotation = Quaternion.Slerp(prevSyncedRotation, syncedRotation, FromLastExcuteSync / syncInterval);
+                preset_sittingTransform.localPosition = transform.localPosition = position;
+                preset_sittingTransform.localRotation = transform.localRotation = rotation;
+            }
+            else
+            {
+                if (synced_Using && local_VehicleObject != null)
                 {
                     preset_sittingTransform.localPosition = local_PlayerChaserTransform.localPosition = position = transform.localPosition;
                     local_trackingData = local_playerApi.GetTrackingData(0);//0 = VRCPlayerApi.TrackingDataType.Head
@@ -139,17 +147,6 @@ namespace frou01.wvf
                     if (position != syncedPosition || rotation != syncedRotation) excuteSync = true;
                     //Debug.Log("PlayerPos Late : " + local_playerApi.GetPosition());
                 }
-            }
-            if (!local_isOwner)
-            {
-                FromLastExcuteSync += Time.deltaTime;
-                position = Vector3.Lerp(prevSyncedPosition, syncedPosition, FromLastExcuteSync / syncInterval);
-                rotation = Quaternion.Slerp(prevSyncedRotation, syncedRotation, FromLastExcuteSync / syncInterval);
-                preset_sittingTransform.localPosition = transform.localPosition = position;
-                preset_sittingTransform.localRotation = transform.localRotation = rotation;
-            }
-            else
-            {
                 if (excuteSync) FromLastExcuteSync += Time.deltaTime;
                 if (FromLastExcuteSync > syncInterval)
                 {
@@ -161,24 +158,22 @@ namespace frou01.wvf
         }
         private void FixedUpdate()
         {
+            if (!local_isOwner) return;
+
             if (synced_Using && local_VehicleObject != null)
             {
-                if (!Utilities.IsValid(local_playerApi)) return;
-                if (local_isOwner)
-                {
-                    Quaternion proxyQuat = Quaternion.Inverse(local_VehicleObject.transform.rotation) * local_trackingData.rotation;
-                    proxyQuat = Quaternion.Euler(0, proxyQuat.eulerAngles.y, 0);
-                    local_moveVelocity.x = 0;
-                    local_moveVelocity.z = 0;
-                    Vector3 applyingControl = proxyQuat *
-                        local_controlMoveInput;
-                    local_moveVelocity += applyingControl;
-                    local_moveVelocity.Normalize();
-                    if (!local_InVehicleController.isGrounded) local_moveVelocity.y += -9.8f * FixedDeltaTime;
-                    else local_moveVelocity.y = 0;
-                    local_moveVelocity.y *= 0.9f;
-                    if (!tempFlag_resetRolling) local_InVehicleController.Move(movedByRotation + local_moveVelocity * FixedDeltaTime);
-                }
+                Quaternion proxyQuat = Quaternion.Inverse(local_VehicleObject.transform.rotation) * local_trackingData.rotation;
+                proxyQuat = Quaternion.Euler(0, proxyQuat.eulerAngles.y, 0);
+                local_moveVelocity.x = 0;
+                local_moveVelocity.z = 0;
+                Vector3 applyingControl = proxyQuat *
+                    local_controlMoveInput;
+                local_moveVelocity += applyingControl;
+                local_moveVelocity.Normalize();
+                if (!local_InVehicleController.isGrounded) local_moveVelocity.y += -9.8f * FixedDeltaTime;
+                else local_moveVelocity.y = 0;
+                local_moveVelocity.y *= 0.9f;
+                if (!tempFlag_resetRolling) local_InVehicleController.Move(movedByRotation + local_moveVelocity * FixedDeltaTime);
             }
         }
 
@@ -212,17 +207,6 @@ namespace frou01.wvf
                 local_PlayerChaser.PlayerPositionScriptControlMode = false;
                 local_PlayerChaser.PostLateUpdate();
             }
-        }
-        public override void OnOwnershipTransferred(VRCPlayerApi player)
-        {
-            if (player == Networking.LocalPlayer) SyncParmReset();
-        }
-
-        private void SyncParmReset()
-        {
-            synced_Using = false;
-            global_targetVehicleID = -1;
-            RequestSerialization();
         }
 
         public override void OnPreSerialization()
